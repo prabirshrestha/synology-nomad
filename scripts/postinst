@@ -2,4 +2,6 @@
 PKG_NAME="mypackage"
 PKG_CONFIG_FILE="/var/packages/${PKG_NAME}/etc/config"
 
+touch ${PKG_CONFIG_FILE}
+
 exit 0
