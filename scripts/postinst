@@ -1,3 +1,5 @@
 #!/bin/sh
+PKG_NAME="mypackage"
+PKG_CONFIG_FILE="/var/packages/${PKG_NAME}/etc/config"
 
 exit 0
