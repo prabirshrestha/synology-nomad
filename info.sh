@@ -1,23 +1,16 @@
 #!/bin/sh
 
 VERSION=$1
-ARCH=$2
-DSM_VERSION=$3
 
 TIMESTAMP=$(date -u +%Y%m%d-%H:%M:%S)
 
-if [ "$DSM_VERSION" = "6" ]; then
-  os_min_ver="6.0.1-7445"
-  os_max_ver="7.0-40000"
-else
-  os_min_ver="7.0-40000"
-  os_max_ver=""
-fi
+os_min_ver="7.0-40000"
+os_max_ver=""
 
 cat <<EOF
 package="nomad"
 version="${VERSION}"
-arch="${ARCH}"
+arch="noarch"
 thirdparty="yes"
 description="Orchestration Made Easy by HashiCorp Nomad."
 displayname="HashiCorp Nomad"

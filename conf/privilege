@@ -1,5 +1,7 @@
 {
     "defaults": {
         "run-as": "package"
-    }
+    },
+    "username": "nomad",
+    "groupname": "nomad"
 }

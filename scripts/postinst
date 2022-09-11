@@ -1,7 +1,55 @@
 #!/bin/sh
-PKG_NAME="mypackage"
-PKG_CONFIG_FILE="/var/packages/${PKG_NAME}/etc/config"
+set -e
 
-touch ${PKG_CONFIG_FILE}
+export OS="${OS:-linux}"
+export ARCH="${ARCH:-}"
+
+if [ "$ARCH" = "" ]; then
+    _arch=$(uname -m)
+    case "${_arch}" in
+      'x86_64')
+        export ARCH="amd64"
+        ;;
+      'aarch64')
+        export ARCH="arm64"
+        ;;
+      *)
+        echo "ERROR: unsupported architecture"
+        exit 1
+        ;;
+    esac
+fi
+
+export NOMAD_VERSION="${ZNOMAD_VERSION:-1.3.5}"
+export NOMAD_URL="${ZNOMAD_URL:-https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_${OS}_${ARCH}.zip}"
+export NOMAD_SHARE_DIR="${SYNOPKG_PKGDEST_VOL}/${SYNOPKG_PKGNAME}"
+
+# https://help.synology.com/developer-guide/synology_package/script_env_var.html
+# env > "${NOMAD_SHARE_DIR}/env"
+
+if [ ! -f "${NOMAD_SHARE_DIR}/bin/nomad" ]; then
+  if [ ! -f "${NOMAD_SHARE_DIR}/tmp/nomad.zip" ]; then
+    curl --create-dirs -Lo "${NOMAD_SHARE_DIR}/tmp/nomad.zip" "${NOMAD_URL}"
+  fi
+  # unzip -o "${NOMAD_SHARE_DIR}/tmp/nomad.zip" -d "${NOMAD_SHARE_DIR}/bin"
+  7z x -y "${NOMAD_SHARE_DIR}/tmp/nomad.zip" -o"${NOMAD_SHARE_DIR}/bin"
+  chmod +x "${NOMAD_SHARE_DIR}/bin/nomad"
+fi
+
+mkdir -p "${NOMAD_SHARE_DIR}/etc/nomad.d"
+mkdir -p "${NOMAD_SHARE_DIR}/var/lib/nomad"
+
+if [ ! -f "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl" ]; then
+  cat <<EOF > "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl"
+data_dir="${NOMAD_SHARE_DIR}/var/lib/nomad"
+server {
+  enabled = true
+  bootstrap_expect = 1
+}
+client {
+  enabled = true
+}
+EOF
+fi;
 
 exit 0
