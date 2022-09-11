@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+# SYNOPKG_PKGETC doesn't exist so we create our own
+export SYNOPKG_PKGETC="${SYNOPKG_PKGETC:-/var/packages/${SYNOPKG_PKGNAME}/etc}"
+
 export OS="${OS:-linux}"
 export ARCH="${ARCH:-}"
 
@@ -25,23 +28,24 @@ export NOMAD_URL="${ZNOMAD_URL:-https://releases.hashicorp.com/nomad/${NOMAD_VER
 export NOMAD_SHARE_DIR="${SYNOPKG_PKGDEST_VOL}/${SYNOPKG_PKGNAME}"
 
 # https://help.synology.com/developer-guide/synology_package/script_env_var.html
-# env > "${NOMAD_SHARE_DIR}/env"
+env > "${NOMAD_SHARE_DIR}/env"
+# env > "${SYNOPKG_PKGDEST}/env"
 
 if [ ! -f "${NOMAD_SHARE_DIR}/bin/nomad" ]; then
-  if [ ! -f "${NOMAD_SHARE_DIR}/tmp/nomad.zip" ]; then
-    curl --create-dirs -Lo "${NOMAD_SHARE_DIR}/tmp/nomad.zip" "${NOMAD_URL}"
+  if [ ! -f "${SYNOPKG_PKGTMP}/tmp/nomad.zip" ]; then
+    curl --create-dirs -Lo "${SYNOPKG_PKGTMP}/nomad.zip" "${NOMAD_URL}"
   fi
-  # unzip -o "${NOMAD_SHARE_DIR}/tmp/nomad.zip" -d "${NOMAD_SHARE_DIR}/bin"
-  7z x -y "${NOMAD_SHARE_DIR}/tmp/nomad.zip" -o"${NOMAD_SHARE_DIR}/bin"
-  chmod +x "${NOMAD_SHARE_DIR}/bin/nomad"
+  # unzip -o "${SYNOPKG_PKGTMP}/nomad.zip" -d "${NOMAD_SHARE_DIR}/bin"
+  7z x -y "${SYNOPKG_PKGTMP}/nomad.zip" -o"${SYNOPKG_PKGDEST}/bin"
+  chmod +x "${SYNOPKG_PKGDEST}/bin/nomad"
 fi
 
-mkdir -p "${NOMAD_SHARE_DIR}/etc/nomad.d"
-mkdir -p "${NOMAD_SHARE_DIR}/var/lib/nomad"
+mkdir -p "${SYNOPKG_PKGETC}/nomad.d"
+mkdir -p "${SYNOPKG_PKGVAR}/lib/nomad"
 
-if [ ! -f "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl" ]; then
-  cat <<EOF > "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl"
-data_dir="${NOMAD_SHARE_DIR}/var/lib/nomad"
+if [ ! -f "${SYNOPKG_PKGETC}/nomad.d/nomad.hcl" ]; then
+  cat <<EOF > "${SYNOPKG_PKGETC}/nomad.d/nomad.hcl"
+data_dir="${SYNOPKG_PKGVAR}/lib/nomad"
 server {
   enabled = true
   bootstrap_expect = 1

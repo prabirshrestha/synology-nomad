@@ -4,7 +4,7 @@ VERSION=$1
 
 TIMESTAMP=$(date -u +%Y%m%d-%H:%M:%S)
 
-os_min_ver="7.0-40000"
+os_min_ver="7.0-40356"
 os_max_ver=""
 
 cat <<EOF

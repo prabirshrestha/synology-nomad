@@ -1,3 +1,4 @@
 INFO
 *.tgz
 *.spk
+package/

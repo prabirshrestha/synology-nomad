@@ -14,4 +14,8 @@ case $1 in
 		echo "App is installed properly"
 		exit 0
 	;;
+	*)
+        echo "Usage: $0 {start|stop|status}" >&2
+        exit 1
+	;;
 esac
