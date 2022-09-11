@@ -28,7 +28,7 @@ export NOMAD_URL="${ZNOMAD_URL:-https://releases.hashicorp.com/nomad/${NOMAD_VER
 export NOMAD_SHARE_DIR="${SYNOPKG_PKGDEST_VOL}/${SYNOPKG_PKGNAME}"
 
 # https://help.synology.com/developer-guide/synology_package/script_env_var.html
-env > "${NOMAD_SHARE_DIR}/env"
+# env > "${NOMAD_SHARE_DIR}/env"
 # env > "${SYNOPKG_PKGDEST}/env"
 
 if [ ! -f "${NOMAD_SHARE_DIR}/bin/nomad" ]; then
