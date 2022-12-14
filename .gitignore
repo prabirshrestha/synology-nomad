@@ -2,5 +2,5 @@
 INFO
 *.tgz
 *.spk
-package/
+package/bin
 tmp/

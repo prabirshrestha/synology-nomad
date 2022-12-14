@@ -1,4 +1,5 @@
 {
+    "systemd-user-unit":{},
 	"usr-local-linker": {
 		"bin": ["package/bin/nomad"]
 	},
@@ -9,5 +10,8 @@
                 "rw": ["nomad"]
             }
         }]
+    },
+    "port-config": {
+        "protocol-file": "package/nomad.sc"
     }
 }

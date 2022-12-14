@@ -1,0 +1,11 @@
+[Unit]
+Description=nomad
+After=network-online.target
+
+[Service]
+Type=simple
+Slice=nomad.slice
+ExecStart=/var/packages/nomad/target/package/start.sh
+Restart=always
+RestartSec=5
+KillMode=process
