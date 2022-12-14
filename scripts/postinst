@@ -53,6 +53,15 @@ server {
 client {
   enabled = true
 }
+plugin "docker" {
+  config {
+    allow_privileged = true
+    volumes {
+      # required for bind mounting host directories
+      enabled = true
+    }
+  }
+}
 EOF
 fi;
 
