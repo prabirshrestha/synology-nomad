@@ -1,6 +1,6 @@
 {
 	"usr-local-linker": {
-		"bin": ["bin/nomad"]
+		"bin": ["package/bin/nomad"]
 	},
     "data-share": {
         "shares": [{
