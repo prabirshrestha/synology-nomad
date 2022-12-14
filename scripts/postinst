@@ -1,19 +1,14 @@
 #!/bin/sh
 set -e
 
-# SYNOPKG_PKGETC doesn't exist so we create our own
-export SYNOPKG_PKGETC="${SYNOPKG_PKGETC:-/var/packages/${SYNOPKG_PKGNAME}/etc}"
+export NOMAD_SHARE_DIR="${SYNOPKG_PKGDEST_VOL}/nomad"
 
-# https://help.synology.com/developer-guide/synology_package/script_env_var.html
-# env > "${NOMAD_SHARE_DIR}/env"
-# env > "${SYNOPKG_PKGDEST}/env"
+mkdir -p "${NOMAD_SHARE_DIR}/etc/nomad.d"
 
-mkdir -p "${SYNOPKG_PKGETC}/nomad.d"
-mkdir -p "${SYNOPKG_PKGVAR}/lib/nomad"
-
-if [ ! -f "${SYNOPKG_PKGETC}/nomad.d/nomad.hcl" ]; then
-  cat <<EOF > "${SYNOPKG_PKGETC}/nomad.d/nomad.hcl"
-data_dir="${SYNOPKG_PKGVAR}/lib/nomad"
+if [ ! -f "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl" ]; then
+  mkdir -p "${NOMAD_SHARE_DIR}/var/lib/nomad"
+  cat <<EOF > "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl"
+data_dir="${NOMAD_SHARE_DIR}/var/lib/nomad"
 server {
   enabled = true
   bootstrap_expect = 1

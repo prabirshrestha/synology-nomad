@@ -1,13 +1,10 @@
 #!/bin/sh
 
+SERVICE_NAME="${SYNOPKG_PKGNAME}"
+NOMAD_SHARE_DIR="${SYNOPKG_PKGDEST_VOL}/nomad"
 PID_FILE="${SYNOPKG_PKGVAR}/nomad.pid"
 LOG_FILE="${SYNOPKG_PKGVAR}/nomad.stdout.log"
-
-# SYNOPKG_PKGETC doesn't exist so we create our own
-export SYNOPKG_PKGETC="${SYNOPKG_PKGETC:-/var/packages/${SYNOPKG_PKGNAME}/etc}"
-
-SERVICE_NAME="${SYNOPKG_PKGNAME}"
-SERVICE_COMMAND="/usr/local/bin/nomad agent -config ${SYNOPKG_PKGETC}/nomad.d/nomad.hcl"
+SERVICE_COMMAND="/usr/local/bin/nomad agent -config ${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl"
 
 start_daemon() {
     local ts=$(date --iso-8601=second)
