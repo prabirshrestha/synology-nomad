@@ -40,7 +40,7 @@ sudo synogroup --member docker nomad            # add nomad user to docker group
 sudo chown root:docker /var/run/docker.sock     # change owner to docker group
 ```
 
-* Stopping and starting the package may be required for nomad to access docker.
+* A one time restart of the package may be required for nomad to access docker after running the above commands.
 
 Docker access can be verified by navigating to the nomad UI and looking into the driver status for docker.
 
@@ -64,6 +64,13 @@ Modify Index = 24
 Policies     = n/a
 Roles        = n/a
 ```
+
+# Uninstalling
+
+* Uninstall can be done via the package center.
+* Due to the nature of how packages work in Synology, `nomad` user and `nomad` share will not be removed during uninstallation of the package.
+ Reinstalling the package will reuse exisiting configurations and data. If you want clean installation you can remove the `nomad` share and install the package again.
+* To delete `noamd` user run `sudo synogroup --del nomad` after package has been uninstall.
 
 # LICENSE
 
