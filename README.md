@@ -24,11 +24,29 @@ Use the package center from Synology DSM to import the nomad spk file.
 * A user `nomad` will be created.
 * A share `nomad` will be created. For example: `/volume1/nomad`.
 * Default configuration can be found on the share in `/path_to_nomad_share/etc/nomad.d/nomad.hcl`.
+  Additional files can be added in the directory for other config files related to nomad. Restarting the package is required for any additional changes to the config.
 * Data directory for nomad is set as `/path_to_nomad_share/var/lib/nomad`
+* `nomad` binary can be found at `/usr/local/bin/nomad`.
+
+# Docker support in Nomad for Synology
+
+Since packages cannot be run as root with DSM7+, additional commands need to be manually executed.
+
+* SSH into the machine and run the following command.
+
+```bash
+sudo synogroup --add docker                     # create a group called docker
+sudo synogroup --member docker nomad            # add nomad user to docker group
+sudo chown root:docker /var/run/docker.sock     # change owner to docker group
+```
+
+* Stopping and starting the package may be required for nomad to access docker.
+
+Docker access can be verified by navigating to the nomad UI and looking into the driver status for docker.
 
 # Accessing Nomad UI
 
-Nomad is accessiblity via the `synologyip:4646` port. Since acl is enabled you will need to
+Nomad is accessiblity via the `SynologyIP:4646` port. Since acl is enabled you will need to
 loging via ssh and run `nomad acl boostrap` to generate the initial token. You can then use the
 `SecretID` as token to authorize the UI portal or generate other tokens.
 
