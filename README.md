@@ -83,7 +83,7 @@ mount {
 * Uninstall can be done via the package center.
 * Due to the nature of how packages work in Synology, `nomad` user and `nomad` share will not be removed during uninstallation of the package.
  Reinstalling the package will reuse exisiting configurations and data. If you want clean installation you can remove the `nomad` share and install the package again.
-* To delete `noamd` user run `sudo synogroup --del nomad` after package has been uninstall.
+* To delete `nomad` user run `sudo synogroup --del nomad` after package has been uninstall.
 
 # LICENSE
 
