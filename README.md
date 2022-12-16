@@ -65,6 +65,19 @@ Policies     = n/a
 Roles        = n/a
 ```
 
+# Volumes
+
+To use host volume you can specific the `mount` settings in `config` section for the nomad job.
+
+```
+mount {
+  type = "bind"
+  source = "/volume1/path/in/host"
+  target = "/path/inside/container"
+  readonly = false
+}
+```
+
 # Uninstalling
 
 * Uninstall can be done via the package center.
