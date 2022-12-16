@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+      branches:
+      - main
+  push:
+    branches:
+      - main
+      - ci/*
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+-[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    outputs:
+      release_id: ${{ steps.release.outputs.id }}
+    strategy:
+      matrix:
+        build: [linux]
+        include:
+          - build: linux
+            os: ubuntu-latest
+            target: x86_64
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
+
+    - name: Get the build metadata
+      shell: bash
+      run: |
+        echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        echo "PACKAGE_VERSION=$(grep -m 1 '^export PACKAGE_VERSION=' build.sh | cut -f 2 -d '=')" >> $GITHUB_ENV
+
+    - name: Validate git tag and Cargo.toml version
+      shell: bash
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        if [ "${{ env.VERSION }}" != "${{ env.PACKAGE_VERSION }}" ]; then
+          echo "git tag version (${{ env.VERSION }}) does not match build.sh version (v${{ env.PACKAGE_VERSION }})"
+          exit 1
+        fi
+
+    - name: Build .spk package
+      run: |
+        ./build.sh
+        echo "ASSET=$(ls *.spk)" >> $GITHUB_ENV
+
+    - name: Create draft release and upload asset
+      id: release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        draft: true
+        files: ${{ env.ASSET }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-release:
+    name: publish-release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: ['build']
+    steps:
+      - name: Publish release
+        uses: StuYarrow/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          id: ${{ needs.build.outputs.release_id }}

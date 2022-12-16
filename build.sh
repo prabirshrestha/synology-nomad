@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
+export PACKAGE_VERSION=1.4.3-1000
 export OS="${OS:-linux}"
 export ARCH="${ARCH:-amd64}"
 export NOMAD_VERSION="${NOMAD_VERSION:-1.4.3}"
@@ -17,7 +18,7 @@ if [[ ! -f "./package/bin/nomad" ]]; then
     unzip -o -d "./package/bin/" "./tmp/${nomad_zip_file}"
 fi
 
-./info.sh 1.4.3-1000 >> INFO
+./info.sh "${PACKAGE_VERSION}" >> INFO
 tar -cvzf package.tgz package
 tar -cvf package.spk INFO LICENSE conf/ package.tgz scripts/pre* scripts/post* scripts/start*
 rm package.tgz
