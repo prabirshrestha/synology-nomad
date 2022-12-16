@@ -17,7 +17,7 @@ if [[ ! -f "./package/bin/nomad" ]]; then
     unzip -o -d "./package/bin/" "./tmp/${nomad_zip_file}"
 fi
 
-./info.sh 0.0.1-1000 >> INFO
+./info.sh 1.4.3-1000 >> INFO
 tar -cvzf package.tgz package
 tar -cvf package.spk INFO LICENSE conf/ package.tgz scripts/pre* scripts/post* scripts/start*
 rm package.tgz
