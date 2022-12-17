@@ -8,8 +8,44 @@ cat <<EOF > "/var/packages/nomad/var/env.sh"
 export NOMAD_SHARE_DIR="$NOMAD_SHARE_DIR"
 EOF
 
+BINDIR=/var/packages/nomad/target/package/bin
+chmod +x ${BINDIR}/cfssljson
+chmod +x ${BINDIR}/cfssl
+
 mkdir -p "${NOMAD_SHARE_DIR}/etc/nomad.d"
 if [ ! -f "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl" ]; then
+
+  # generate root cert
+  if [ ! -f "${NOMAD_SHARE_DIR}/etc/certs/nomad-ca-key.pem" ]; then
+    mkdir -p "$NOMAD_SHARE_DIR/etc/certs"
+
+    "$BINDIR/cfssl" print-defaults csr | "$BINDIR/cfssl" gencert -initca - | "$BINDIR/cfssljson" \
+      -bare "${NOMAD_SHARE_DIR}/etc/certs/nomad-ca"
+
+    if [ ! -f "${NOMAD_SHARE_DIR}/etc/certs/cfssl.json" ]; then
+  cat <<EOF > "${NOMAD_SHARE_DIR}/etc/certs/cfssl.json"
+{
+  "signing": {
+    "default": {
+      "expiry": "876666h",
+      "usages": ["signing", "key encipherment", "server auth", "client auth"]
+    }
+  }
+}
+EOF
+    fi
+
+    # generate cert for server
+    echo '{}' | "$BINDIR/cfssl" gencert -ca="$NOMAD_SHARE_DIR/etc/certs/nomad-ca.pem" \
+      -ca-key="$NOMAD_SHARE_DIR/etc/certs/nomad-ca-key.pem" -config="$NOMAD_SHARE_DIR/etc/certs/cfssl.json" \
+      -hostname="server.global.nomad,localhost,127.0.0.1" - | "$BINDIR/cfssljson" -bare "${NOMAD_SHARE_DIR}/etc/certs/server"
+
+    # generate cert for client
+    echo '{}' | "$BINDIR/cfssl" gencert -ca="$NOMAD_SHARE_DIR/etc/certs/nomad-ca.pem" \
+      -ca-key="$NOMAD_SHARE_DIR/etc/certs/nomad-ca-key.pem" -config="$NOMAD_SHARE_DIR/etc/certs/cfssl.json" \
+      -hostname="client.global.nomad,localhost,127.0.0.1" - | "$BINDIR/cfssljson" -bare "${NOMAD_SHARE_DIR}/etc/certs/client"
+  fi
+
   mkdir -p "${NOMAD_SHARE_DIR}/var/lib/nomad"
   cat <<EOF > "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl"
 data_dir="${NOMAD_SHARE_DIR}/var/lib/nomad"
@@ -22,6 +58,17 @@ client {
 }
 acl {
   enabled = true
+}
+tls {
+  http = true
+  rpc  = true
+
+  ca_file   = "$NOMAD_SHARE_DIR/etc/certs/nomad-ca.pem"
+  cert_file = "$NOMAD_SHARE_DIR/etc/certs/server.pem"
+  key_file  = "$NOMAD_SHARE_DIR/etc/certs/server-key.pem"
+
+  verify_server_hostname = false
+  verify_https_client = true
 }
 plugin "raw_exec" {
   config {
