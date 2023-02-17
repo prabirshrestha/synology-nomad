@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-export PACKAGE_VERSION=1.4.3-2000
+export PACKAGE_VERSION=1.4.4-1000
 export OS="${OS:-linux}"
 export ARCH="${ARCH:-amd64}"
-export NOMAD_VERSION="${NOMAD_VERSION:-1.4.3}"
+export NOMAD_VERSION="${NOMAD_VERSION:-1.4.4}"
 nomad_zip_file="nomad_${NOMAD_VERSION}_${OS}_${ARCH}.zip"
 export NOMAD_URL="${NOMAD_URL:-https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/${nomad_zip_file}}"
 
