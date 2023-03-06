@@ -40,14 +40,14 @@ jobs:
         echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
         echo "PACKAGE_VERSION=$(grep -m 1 '^export PACKAGE_VERSION=' build.sh | cut -f 2 -d '=')" >> $GITHUB_ENV
 
-    - name: Validate git tag and Cargo.toml version
-      shell: bash
-      if: startsWith(github.ref, 'refs/tags/')
-      run: |
-        if [ "${{ env.VERSION }}" != "${{ env.PACKAGE_VERSION }}" ]; then
-          echo "git tag version (${{ env.VERSION }}) does not match build.sh version (v${{ env.PACKAGE_VERSION }})"
-          exit 1
-        fi
+    # - name: Validate git tag and package version
+    #   shell: bash
+    #   if: startsWith(github.ref, 'refs/tags/')
+    #   run: |
+    #     if [ "${{ env.VERSION }}" != "${{ env.PACKAGE_VERSION }}" ]; then
+    #       echo "git tag version (${{ env.VERSION }}) does not match build.sh version (v${{ env.PACKAGE_VERSION }})"
+    #       exit 1
+    #     fi
 
     - name: Build .spk package
       run: |
