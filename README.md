@@ -14,8 +14,8 @@ cd synology-nomad
 To change the version to nomad binary or architecture set the environment version.
 
 ```bash
-ARCH=amd64 NOMAD_VERSION=1.4.0 ./build.sh
-ARCH=arm64 NOMAD_VERSION=1.4.0 ./build.sh
+ARCH=amd64 NOMAD_VERSION=1.5.0 ./build.sh
+ARCH=arm64 NOMAD_VERSION=1.5.0 ./build.sh
 ```
 
 # Installing the package

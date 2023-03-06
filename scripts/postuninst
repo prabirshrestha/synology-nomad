@@ -1,11 +1,3 @@
 #!/bin/sh
 
-echo "postuinst"
-# PKG_NAME="mypackage"
-# PKG_CONFIG_FILE="/var/packages/${PKG_NAME}/etc/config"
-
-# if [ "$SYNOPKG_PKG_STATUS" = "UNINSTALL" ]; then
-#     rm ${PKG_CONFIG_FILE}
-# fi
-
 exit 0
