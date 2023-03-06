@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-export NOMAD_VERSION="${NOMAD_VERSION:-1.4.4}"
+export NOMAD_VERSION="${NOMAD_VERSION:-1.5.0}"
 export PACKAGE_VERSION="${NOMAD_VERSION}-1000"
 export OS="${OS:-linux}"
 export ARCH="${ARCH:-amd64}"
@@ -14,7 +14,7 @@ if [[ ! -f "./tmp/${nomad_zip_file}" ]]; then
     curl --create-dirs -Lo "./tmp/$nomad_zip_file" "${NOMAD_URL}"
 fi
 
- unzip -o -d "./package/bin/" "./tmp/${nomad_zip_file}"
+unzip -o -d "./package/bin/" "./tmp/${nomad_zip_file}"
 
 ./info.sh "${PACKAGE_VERSION}" > INFO
 tar -cvzf package.tgz package
