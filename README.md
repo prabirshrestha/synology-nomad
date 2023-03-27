@@ -47,7 +47,7 @@ Docker access can be verified by navigating to the nomad UI and looking into the
 # Accessing Nomad UI
 
 Nomad is accessiblity via the `SynologyIP:4646` port. Since acl is enabled you will need to
-loging via ssh and run `nomad acl boostrap` to generate the initial token. You can then use the
+loging via ssh and run `nomad acl bootstrap` to generate the initial token. You can then use the
 `SecretID` as token to authorize the UI portal or generate other tokens.
 
 ```bash
