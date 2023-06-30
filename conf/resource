@@ -12,6 +12,6 @@
         }]
     },
     "port-config": {
-        "protocol-file": "package/nomad.sc"
+        "protocol-file": "package/conf/nomad.sc"
     }
 }
