@@ -2,16 +2,47 @@
 set -e
 
 export NOMAD_SHARE_DIR="${SYNOPKG_PKGDEST_VOL}/nomad"
+mkdir -p "${NOMAD_SHARE_DIR}/var/log/nomad"
+LOG_FILE="${NOMAD_SHARE_DIR}/var/log/nomad/install.log"
 
-mkdir -p /var/packages/nomad/var
-cat <<EOF > "/var/packages/nomad/var/env.sh"
-export NOMAD_SHARE_DIR="$NOMAD_SHARE_DIR"
-EOF
+NOMAD_EXE="/var/packages/nomad/target/bin/nomad"
 
-mkdir -p "${NOMAD_SHARE_DIR}/etc/nomad.d"
-if [ ! -f "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl" ]; then
+echo "$(date --iso-8601=second) Starting postinst with: NOMAD_SHARE_DIR=${NOMAD_SHARE_DIR}" >${LOG_FILE}
+
+if [ "$SYNOPKG_PKG_STATUS" = "INSTALL" ]; then
+  echo "$(date --iso-8601=second) Installing Nomad" >>${LOG_FILE}
+
+  echo "$(date --iso-8601=second) Creating /var/packages/nomad/var/env.sh" >>${LOG_FILE}
+  mkdir -p /var/packages/nomad/var
+  echo "export NOMAD_SHARE_DIR=\"$NOMAD_SHARE_DIR\"" >/var/packages/nomad/var/env.sh
+
+  echo "$(date --iso-8601=second) Creating ${NOMAD_SHARE_DIR}/etc/nomad.d" >>${LOG_FILE}
+  mkdir -p "${NOMAD_SHARE_DIR}/etc/nomad.d"
+
+  # if [ ! -d "${NOMAD_SHARE_DIR}/etc/certs" ]; then
+    echo "$(date --iso-8601=second) Creating ${NOMAD_SHARE_DIR}/etc/certs" >>${LOG_FILE}
+    mkdir -p "${NOMAD_SHARE_DIR}/etc/certs"
+    cd "${NOMAD_SHARE_DIR}/etc/certs"
+    echo "$(date --iso-8601=second) Creating nomad ca create" >>${LOG_FILE}
+    $NOMAD_EXE tls ca create
+    echo "$(date --iso-8601=second) Creating nomad server cert" >>${LOG_FILE}
+    $NOMAD_EXE tls cert create -server -region ${pkgwizard_nomad_region}
+    echo "$(date --iso-8601=second) Creating nomad cli cert" >>${LOG_FILE}
+    $NOMAD_EXE tls cert create -cli
+    cd -
+  # else
+  #   echo "$(date --iso-8601=second) Skip creating certs" >>${LOG_FILE}
+  # fi
+
+  echo "$(date --iso-8601=second) Creating ${NOMAD_SHARE_DIR}/var/lib/nomad" >>${LOG_FILE}
   mkdir -p "${NOMAD_SHARE_DIR}/var/lib/nomad"
-  cat <<EOF > "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl"
+
+  NOMAD_CONFIG_FILE="${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl"
+
+  if [ ! -f "${NOMAD_CONFIG_FILE}" ]; then
+    echo "$(date --iso-8601=second) Creating ${NOMAD_CONFIG_FILE}" >>${LOG_FILE}
+
+    cat <<EOF > "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl"
 data_dir="${NOMAD_SHARE_DIR}/var/lib/nomad"
 server {
   enabled = true
@@ -38,6 +69,9 @@ plugin "docker" {
   }
 }
 EOF
-fi;
+  else
+    echo "$(date --iso-8601=second) Skip creating ${NOMAD_CONFIG_FILE} due to existing file." >>${LOG_FILE}
+  fi
+fi
 
 exit 0
