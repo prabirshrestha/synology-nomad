@@ -39,7 +39,7 @@ if [ "$SYNOPKG_PKG_STATUS" = "INSTALL" ]; then
   mkdir -p "${NOMAD_SHARE_DIR}/var/lib/nomad"
 
   NOMAD_CONFIG_FILE="${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl"
-  rm ${NOMAD_CONFIG_FILE}
+  rm -rf ${NOMAD_CONFIG_FILE}
 
   if [ ! -f "${NOMAD_CONFIG_FILE}" ]; then
     echo "$(date --iso-8601=second) Creating ${NOMAD_CONFIG_FILE}" >>${LOG_FILE}
