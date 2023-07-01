@@ -5,7 +5,7 @@
             "desc": "Nomad UI",
             "icon": "images/nomad_256.png",
             "type": "url",
-            "protocol": "http",
+            "protocol": "https",
             "port": "__PORT__",
             "url": "/"
         }
