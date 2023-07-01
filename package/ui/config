@@ -1,0 +1,13 @@
+{
+    ".url": {
+        "SYNO.SDS.Nomad": {
+            "title": "Nomad UI",
+            "desc": "Nomad UI",
+            "icon": "images/nomad_256.png",
+            "type": "url",
+            "protocol": "http",
+            "port": "__PORT__",
+            "url": "/"
+        }
+    }
+}
