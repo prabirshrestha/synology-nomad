@@ -17,7 +17,7 @@ fi
 unzip -o -d "./package/bin/" "./tmp/${nomad_zip_file}"
 
 ./info.sh "${PACKAGE_VERSION}" > INFO
-tar -cvzf package.tgz package
+tar -cvzf package.tgz -C package .
 tar -cvf package.spk INFO LICENSE conf/ package.tgz scripts/pre* scripts/post* scripts/start*
 rm package.tgz
 mv package.spk "nomad_${NOMAD_VERSION}_${OS}_${ARCH}.spk"

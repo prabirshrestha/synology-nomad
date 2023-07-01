@@ -1,7 +1,7 @@
 {
     "systemd-user-unit":{},
 	"usr-local-linker": {
-		"bin": ["package/bin/nomad"]
+		"bin": ["bin/nomad"]
 	},
     "data-share": {
         "shares": [{
@@ -12,6 +12,6 @@
         }]
     },
     "port-config": {
-        "protocol-file": "package/conf/nomad.sc"
+        "protocol-file": "conf/nomad.sc"
     }
 }
