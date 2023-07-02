@@ -54,9 +54,23 @@ tee "$SYNOPKG_TEMP_LOGFILE" <<EOF
 		"desc": "Nomad Datacenter",
 		"subitems": [
 		    {
-			"key": "pkgwizard_nomad_dc",
+			"key": "pkgwizard_nomad_datacenter",
 			"desc": "Nomad Datacenter",
 			"defaultValue": "dc1",
+			"validator": {
+			    "allowBlank": false
+			}
+		    }
+		]
+	    },
+	    {
+		"type": "textfield",
+		"desc": "Nomad Region",
+		"subitems": [
+		    {
+			"key": "pkgwizard_nomad_region",
+			"desc": "Nomad region",
+			"defaultValue": "global",
 			"validator": {
 			    "allowBlank": false
 			}

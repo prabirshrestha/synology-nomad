@@ -46,12 +46,30 @@ Docker access can be verified by navigating to the nomad UI and looking into the
 
 # Accessing Nomad UI
 
-Nomad is accessiblity via the `SynologyIP:4646` port. Since acl is enabled you will need to
-loging via ssh and run `nomad acl bootstrap` to generate the initial token. You can then use the
+Nomad is accessiblity via the `https://SynologyIP:4646` port.
+
+## Import TLS cert
+
+Since TLS is enabled you need to import the cert before you can access.
+
+* Use the following command to convert the cert readable by browser/machine from your Synology NAS. Password is set to empty. To set password remove `-passout pass:`.
+
+```bash
+cd /volume1/nomad/etc/certs
+openssl pkcs12 -export -inkey ./global-cli-nomad-key.pem -in ./global-cli-nomad.pem -out ./global-cli-nomad.p12 -passout pass:
+```
+* Navigate to `chrome://settings/certificates?search=certificate` in Chrome
+
+## ACL
+
+Since acl is enabled you will need to loging via ssh and run `nomad acl bootstrap` to generate the initial token. You can then use the
 `SecretID` as token to authorize the UI portal or generate other tokens.
 
 ```bash
-$ nomad acl bootstrap
+$ export NOMAD_ADDR=https://SynologyNasIP:4646
+$ export NOMAD_CLIENT_CERT=/volume1/nomad/etc/certs/globalregion-cli-nomad.pem
+$ export NOMAD_CLIENT_KEY=/volume1/nomad/etc/certs/globalregion-cli-nomad-key.pem
+$ nomad acl bootstrap -tls-skip-verify
 Accessor ID  = 5325e529-8048-2a6a-711e-8a1110562c93
 Secret ID    = fe672cf4-16b0-af1d-3db5-1832a8ec4c7d
 Name         = Bootstrap Token
@@ -64,6 +82,8 @@ Modify Index = 24
 Policies     = n/a
 Roles        = n/a
 ```
+
+You can run `source /volume1/nomad/env` to easily environment variables.
 
 # Volumes
 
