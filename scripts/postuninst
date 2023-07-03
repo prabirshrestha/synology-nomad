@@ -1,3 +1,8 @@
 #!/bin/sh
 
+if [ "$SYNOPKG_PKG_STATUS" = "UNINSTALL" ]; then
+    rm -f "/var/packages/$SYNOPKG_PKGNAME/etc/port_config"
+    rm -f "/var/packages/$SYNOPKG_PKGNAME/var/env.sh"
+fi
+
 exit 0

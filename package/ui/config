@@ -6,7 +6,7 @@
             "icon": "images/nomad_256.png",
             "type": "url",
             "protocol": "https",
-            "port": "4646",
+            "port": "@NOMAD_WEB_UI_PORT@",
             "url": "/",
             "allUsers": false,
             "grantPrivilege": "local"

@@ -10,8 +10,5 @@
                 "rw": ["nomad"]
             }
         }]
-    },
-    "port-config": {
-        "protocol-file": "conf/nomad.sc"
     }
 }
