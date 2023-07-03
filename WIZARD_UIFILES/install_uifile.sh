@@ -30,7 +30,10 @@ tee "$SYNOPKG_TEMP_LOGFILE" <<EOF
 			"desc": "Port for Nomad Web UI",
 			"defaultValue": "4646",
 			"validator": {
-			    "allowBlank": false
+			    "allowBlank": false,
+			    "regex": {
+				"expr": "/^[1-9]\\\\d{0,4}$/"
+			    }
 			}
 		    }
 		]

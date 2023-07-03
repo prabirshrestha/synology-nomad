@@ -6,8 +6,10 @@
             "icon": "images/nomad_256.png",
             "type": "url",
             "protocol": "https",
-            "port": "__PORT__",
-            "url": "/"
+            "port": "4646",
+            "url": "/",
+            "allUsers": false,
+            "grantPrivilege": "local"
         }
     }
 }
