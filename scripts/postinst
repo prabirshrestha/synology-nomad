@@ -1,13 +1,15 @@
 #!/bin/sh
 set -e
 
-export NOMAD_SHARE_DIR="${SYNOPKG_PKGDEST_VOL}/nomad"
+
+export NOMAD_SHARE_DIR="/var/packages/$SYNOPKG_PKGNAME/shares/nomad"
 mkdir -p "${NOMAD_SHARE_DIR}/var/log/nomad"
 LOG_FILE="${NOMAD_SHARE_DIR}/var/log/nomad/install.log"
 
 NOMAD_EXE="/var/packages/nomad/target/bin/nomad"
 
 echo "$(date --iso-8601=second) Starting postinst with: NOMAD_SHARE_DIR=${NOMAD_SHARE_DIR}" >${LOG_FILE}
+echo "$(env)" >>${LOG_FILE}
 
 if [ "$SYNOPKG_PKG_STATUS" = "INSTALL" ]; then
   echo "$(date --iso-8601=second) Installing Nomad" >>${LOG_FILE}
