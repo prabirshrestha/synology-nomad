@@ -4,9 +4,6 @@ set -e
 export NOMAD_SHARE_DIR="${SYNOPKG_PKGDEST_VOL}/nomad"
 
 mkdir -p /var/packages/nomad/var
-cat <<EOF > "/var/packages/nomad/var/env.sh"
-export NOMAD_SHARE_DIR="$NOMAD_SHARE_DIR"
-EOF
 
 mkdir -p "${NOMAD_SHARE_DIR}/etc/nomad.d"
 if [ ! -f "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl" ]; then
