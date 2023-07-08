@@ -1,40 +1,62 @@
 #!/bin/sh
 set -e
 
-export NOMAD_SHARE_DIR="${SYNOPKG_PKGDEST_VOL}/nomad"
+export NOMAD_SHARE_DIR="/var/packages/$SYNOPKG_PKGNAME/shares/nomad"
+mkdir -p "${NOMAD_SHARE_DIR}/var/log/nomad"
+LOG_FILE="${NOMAD_SHARE_DIR}/var/log/nomad/install.log"
 
-mkdir -p /var/packages/nomad/var
+echo "$(date --iso-8601=second) Starting postinst with: NOMAD_SHARE_DIR=${NOMAD_SHARE_DIR}" >${LOG_FILE}
 
-mkdir -p "${NOMAD_SHARE_DIR}/etc/nomad.d"
-if [ ! -f "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl" ]; then
-  mkdir -p "${NOMAD_SHARE_DIR}/var/lib/nomad"
-  cat <<EOF > "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl"
-data_dir="${NOMAD_SHARE_DIR}/var/lib/nomad"
-server {
-  enabled = true
-  bootstrap_expect = 1
-}
-client {
-  enabled = true
-}
-acl {
-  enabled = true
-}
-plugin "raw_exec" {
-  config {
+NOMAD_WEB_UI_URL_CONFIG_FILE="/var/packages/$SYNOPKG_PKGNAME/etc/nomad_web_ui_url_config"
+if [ ! -z "$pkgwizard_nomad_web_ui_url" ]; then
+    # new install
+    NOMAD_WEB_UI_URL="$pkgwizard_nomad_web_ui_url"
+elif [ -f "$PORT_CONFIG_FILE" ]; then
+    # upgrade
+    NOMAD_WEB_UI_URL=$(get_key_value "$NOMAD_WEB_UI_URL_CONFIG_FILE" nomad_web_ui_url)
+fi
+echo "NOMAD_WEB_UI_URL=$NOMAD_WEB_UI_URL" > $NOMAD_WEB_UI_URL_CONFIG_FILE
+
+if [ -f "$SYNOPKG_PKGDEST/ui/config" ]; then
+    echo "$(date --iso-8601=second) Updating variables in $SYNOPKG_PKGDEST/ui/config" >>${LOG_FILE}
+    NOMAD_WEB_UI_URL=${NOMAD_WEB_UI_URL////\\/}
+    sed -i "s/@NOMAD_WEB_UI_URL@/$NOMAD_WEB_UI_URL/g" "$SYNOPKG_PKGDEST/ui/config"
+fi
+
+if [ "$SYNOPKG_PKG_STATUS" = "INSTALL" ]; then
+  echo "$(date --iso-8601=second) Installing Nomad" >>${LOG_FILE}
+
+  mkdir -p "${NOMAD_SHARE_DIR}/etc/nomad.d"
+  if [ ! -f "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl" ]; then
+    mkdir -p "${NOMAD_SHARE_DIR}/var/lib/nomad"
+    cat <<EOF > "${NOMAD_SHARE_DIR}/etc/nomad.d/nomad.hcl"
+  data_dir="${NOMAD_SHARE_DIR}/var/lib/nomad"
+  server {
+    enabled = true
+    bootstrap_expect = 1
+  }
+  client {
     enabled = true
   }
-}
-plugin "docker" {
-  config {
-    allow_privileged = true
-    volumes {
-      # required for bind mounting host directories
+  acl {
+    enabled = true
+  }
+  plugin "raw_exec" {
+    config {
       enabled = true
     }
   }
-}
+  plugin "docker" {
+    config {
+      allow_privileged = true
+      volumes {
+        # required for bind mounting host directories
+        enabled = true
+      }
+    }
+  }
 EOF
+  fi;
 fi;
 
 exit 0
