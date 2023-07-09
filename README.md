@@ -78,6 +78,12 @@ mount {
 }
 ```
 
+# Logs
+
+Installation log can be found at `/var/packages/nomad/shares/nomad/var/log/nomad/install.log`.
+
+systemd logs for nomad, can be found by `sudo systemctl status pkgctl-nomad.service` or `sudo journalctl -u pkgctl-nomad.service`.
+
 # Uninstalling
 
 * Uninstall can be done via the package center.
