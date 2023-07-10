@@ -1,3 +1,5 @@
 #!/bin/sh
 
+rm -f /var/packages/$SYNOPKG_PKGNAME/etc/nomad_web_ui_url_config
+
 exit 0
