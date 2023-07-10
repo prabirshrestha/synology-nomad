@@ -22,10 +22,10 @@ ARCH=arm64 NOMAD_VERSION=1.5.0 ./build.sh
 
 Use the package center from Synology DSM to import the nomad spk file.
 * A user `nomad` will be created.
-* A share `nomad` will be created. For example: `/volume1/nomad`.
-* Default configuration can be found on the share in `/path_to_nomad_share/etc/nomad.d/nomad.hcl`.
+* A share `nomad` will be created. For example: `/volume1/nomad` which can be accessed using `/var/packages/nomad/shares/nomad`.
+* Default configuration can be found on the share in `/var/packages/nomad/shares/etc/nomad.d/nomad.hcl`.
   Additional files can be added in the directory for other config files related to nomad. Restarting the package is required for any additional changes to the config.
-* Data directory for nomad is set as `/path_to_nomad_share/var/lib/nomad`
+* Data directory for nomad is set as `/var/packages/nomad/shares/nomad/var/lib/nomad`
 * `nomad` binary can be found at `/usr/local/bin/nomad`.
 
 # Docker support in Nomad for Synology
@@ -46,7 +46,7 @@ Docker access can be verified by navigating to the nomad UI and looking into the
 
 # Accessing Nomad UI
 
-Nomad is accessiblity via the `SynologyIP:4646` port. Since acl is enabled you will need to
+Nomad is accessiblity via the `http://SynologyIP:4646` port. Since acl is enabled you will need to
 loging via ssh and run `nomad acl bootstrap` to generate the initial token. You can then use the
 `SecretID` as token to authorize the UI portal or generate other tokens.
 
@@ -63,6 +63,53 @@ Create Index = 24
 Modify Index = 24
 Policies     = n/a
 Roles        = n/a
+```
+
+# Security
+
+Default nomad configuration uses http instead of https. It is recommended to follow best practices for securing nomad such as using TLS certs or changing firewall rules to disable nomad access.
+
+## TLS certs
+
+Here is a basic example on creating tls certs assuming `192.168.1.5` is an IP address of Synology NAS.
+`-cluster-region`, `-additional-domain`, `-additional-ipaddress` and `-additional-dns` and `-days` are optional. Refer to the official nomad documention for details.
+
+```bash
+export IP=192.168.1.5
+export DOMAIN=nas.example.com
+export REGION=global
+mkdir -p /var/packages/nomad/shares/nomad/etc/certs
+cd /var/packages/nomad/shares/nomad/etc/certs
+nomad tls ca create -additional-domain $IP -additional-domain $DOMAIN -days 1825
+nomad tls cert create -server -cluster-region $REGION -additional-ipaddress $IP -additional-dnsname $DOMAIN -days 365
+nomad tls cert create -cli -cluster-region $REGION -additional-ipaddress $IP -additional-dnsname $DOMAIN -days 365
+```
+
+Update `/var/packages/nomad/shares/nomad/etc/nomad.d/nomad.hcl` to use the certificates.
+
+```
+export REGION=global
+    cat <<EOF >> /var/packages/nomad/shares/nomad/etc/nomad.d/nomad.hcl
+region=$REGION
+tls {
+  http = true
+  rpc = true
+
+  ca_file = "/volume1/nomad/etc/certs/nomad-agent-ca.pem"
+  cert_file = "/volume1/nomad/etc/certs/$REGION-server-nomad.pem"
+  key_file = "/volume1/nomad/etc/certs/$REGION-server-nomad-key.pem"
+
+  verify_server_hostname=true
+  verify_https_client=true
+}
+EOF
+```
+
+To access via Chrome browser generate the p12 cert and import by navigating to `chrome://settings/certificates?search=certificate`.
+
+```bash
+export REGION=global
+openssl pkcs12 -export -inkey ./$REGION-cli-nomad-key.pem -in ./$REGION-cli-nomad.pem -out ./$REGION-cli-nomad.p12 -passout pass:
 ```
 
 # Volumes

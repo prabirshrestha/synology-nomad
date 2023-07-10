@@ -37,31 +37,31 @@ if [ "$SYNOPKG_PKG_STATUS" = "INSTALL" ]; then
 
   if [ ! -f "${NOMAD_CONFIG_FILE}" ]; then
     cat <<EOF > "${NOMAD_CONFIG_FILE}"
-  data_dir="${NOMAD_SHARE_DIR}/var/lib/nomad"
-  server {
+data_dir="${NOMAD_SHARE_DIR}/var/lib/nomad"
+server {
+  enabled = true
+  bootstrap_expect = 1
+}
+client {
+  enabled = true
+}
+acl {
+  enabled = true
+}
+plugin "raw_exec" {
+  config {
     enabled = true
-    bootstrap_expect = 1
   }
-  client {
-    enabled = true
-  }
-  acl {
-    enabled = true
-  }
-  plugin "raw_exec" {
-    config {
+}
+plugin "docker" {
+  config {
+    allow_privileged = true
+    volumes {
+      # required for bind mounting host directories
       enabled = true
     }
   }
-  plugin "docker" {
-    config {
-      allow_privileged = true
-      volumes {
-        # required for bind mounting host directories
-        enabled = true
-      }
-    }
-  }
+}
 EOF
     echo "$(date --iso-8601=second) Completed creation of ${NOMAD_SHARE_DIR}/etc/nomad.d" >>${LOG_FILE}
   else
