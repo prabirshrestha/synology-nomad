@@ -114,7 +114,7 @@ openssl pkcs12 -export -inkey ./$REGION-cli-nomad-key.pem -in ./$REGION-cli-noma
 
 # Volumes
 
-To use host volume you can specific the `mount` settings in `config` section for the nomad job.
+To use host volume you can specify the `mount` settings in `config` section for the nomad job.
 
 ```
 mount {
