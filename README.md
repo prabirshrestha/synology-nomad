@@ -46,8 +46,8 @@ Docker access can be verified by navigating to the nomad UI and looking into the
 
 # Accessing Nomad UI
 
-Nomad is accessiblity via the `http://SynologyIP:4646` port. Since acl is enabled you will need to
-loging via ssh and run `nomad acl bootstrap` to generate the initial token. You can then use the
+Nomad is accessible via the `http://SynologyIP:4646` port. Since acl is enabled you will need to
+login via ssh and run `nomad acl bootstrap` to generate the initial token. You can then use the
 `SecretID` as token to authorize the UI portal or generate other tokens.
 
 ```bash
@@ -133,10 +133,10 @@ systemd logs for nomad, can be found by `sudo systemctl status pkgctl-nomad.serv
 
 # Uninstalling
 
-* Uninstall can be done via the package center.
+* Uninstallation can be done via the package center.
 * Due to the nature of how packages work in Synology, `nomad` user and `nomad` share will not be removed during uninstallation of the package.
  Reinstalling the package will reuse exisiting configurations and data. If you want clean installation you can remove the `nomad` share and install the package again.
-* To delete `nomad` user run `sudo synogroup --del nomad` after package has been uninstall.
+* To delete `nomad` user run `sudo synogroup --del nomad` after package has been uninstalled.
 
 # LICENSE
 
