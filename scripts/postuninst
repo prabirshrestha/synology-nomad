@@ -1,5 +1,7 @@
 #!/bin/sh
 
-rm -f /var/packages/$SYNOPKG_PKGNAME/etc/nomad_web_ui_url_config
+if [ "$SYNOPKG_PKG_STATUS" = "UNINSTALL" ]; then
+    rm -f /var/packages/$SYNOPKG_PKGNAME/etc/nomad_web_ui_url_config
+fi
 
 exit 0

@@ -11,10 +11,11 @@ NOMAD_WEB_UI_URL_CONFIG_FILE="/var/packages/$SYNOPKG_PKGNAME/etc/nomad_web_ui_ur
 if [ ! -z "$pkgwizard_nomad_web_ui_url" ]; then
     # new install
     NOMAD_WEB_UI_URL="$pkgwizard_nomad_web_ui_url"
-elif [ -f "$PORT_CONFIG_FILE" ]; then
+elif [ -f "$NOMAD_WEB_UI_URL_CONFIG_FILE" ]; then
     # upgrade
-    NOMAD_WEB_UI_URL=$(get_key_value "$NOMAD_WEB_UI_URL_CONFIG_FILE" nomad_web_ui_url)
+    NOMAD_WEB_UI_URL=$(grep -v '^#' $NOMAD_WEB_UI_URL_CONFIG_FILE | grep -e "NOMAD_WEB_UI_URL" | sed -e 's/.*=//')
 fi
+
 echo "NOMAD_WEB_UI_URL=$NOMAD_WEB_UI_URL" > $NOMAD_WEB_UI_URL_CONFIG_FILE
 
 if [ -f "$SYNOPKG_PKGDEST/ui/config" ]; then
