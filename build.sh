@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-export NOMAD_VERSION="${NOMAD_VERSION:-1.5.7}"
+export NOMAD_VERSION="${NOMAD_VERSION:-1.6.0}"
 export PACKAGE_VERSION="${NOMAD_VERSION}-1000"
 export OS="${OS:-linux}"
 export ARCH="${ARCH:-amd64}"
