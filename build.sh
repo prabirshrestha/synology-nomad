@@ -1,7 +1,11 @@
 #!/bin/bash
 set -e
 
-export NOMAD_VERSION="${NOMAD_VERSION:-1.6.0}"
+if [[ -z "$NOMAD_VERSION" ]]; then
+# renovate: datasource=github-releases depName=hashicorp/nomad versioning=semver extractVersion=^v(?<version>.*)$
+NOMAD_VERSION=1.6.0
+fi
+
 export PACKAGE_VERSION="${NOMAD_VERSION}-2000"
 export OS="${OS:-linux}"
 export ARCH="${ARCH:-amd64}"
