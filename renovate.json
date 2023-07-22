@@ -3,10 +3,9 @@
   "extends": [
     "config:base"
   ],
-  "enabledManagers": ["github-actions","regex"],
   "regexManagers": [
     {
-      "fileMatch": ["build.sh"],
+      "fileMatch": ["build\\.sh"],
       "matchStrings": ["export NOMAD_VERSION=\"\$\{NOMAD_VERSION:-(?<currentValue>.+)\}\""],
       "depNameTemplate": "hashicorp/nomad",
       "datasourceTemplate": "github-releases",
