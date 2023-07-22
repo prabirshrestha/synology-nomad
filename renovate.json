@@ -3,6 +3,7 @@
   "extends": [
     "config:base"
   ],
+  "enabledManagers": ["github-actions","regex"],
   "regexManagers": [
     {
       "fileMatch": ["build.sh"],
