@@ -2,5 +2,14 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base"
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["build.sh"],
+      "matchStrings": ["export NOMAD_VERSION=\"\$\{NOMAD_VERSION:-(?<currentValue>.+)\}\""],
+      "depNameTemplate": "hashicorp/nomad",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>\\S+)"
+    }
   ]
 }
