@@ -6,7 +6,7 @@ if [[ -z "$NOMAD_VERSION" ]]; then
 NOMAD_VERSION=1.6.1
 fi
 
-export PACKAGE_VERSION="${NOMAD_VERSION}-2000"
+export PACKAGE_VERSION="${NOMAD_VERSION}-1000"
 export OS="${OS:-linux}"
 export ARCH="${ARCH:-amd64}"
 nomad_zip_file="nomad_${NOMAD_VERSION}_${OS}_${ARCH}.zip"
