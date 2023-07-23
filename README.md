@@ -112,6 +112,18 @@ export REGION=global
 openssl pkcs12 -export -inkey ./$REGION-cli-nomad-key.pem -in ./$REGION-cli-nomad.pem -out ./$REGION-cli-nomad.p12 -passout pass:
 ```
 
+To easily access via client set the following enviorment variables. You can also save this to a file `env` and call `source env`.
+
+```bash
+export REGION=global
+export IP=192.168.1.5
+export NOMAD_ADDR=https://$IP:4646
+export NOMAD_CACERT=nomad-agent-ca.pem
+export NOMAD_CACERT=/var/packages/nomad/shares/nomad/etc/certs/nomad-agent-ca.pem
+export NOMAD_CLIENT_CERT=/var/packages/nomad/shares/nomad/etc/certs/$REGION-cli-nomad.pem
+export NOMAD_CLIENT_KEY=/var/packages/nomad/shares/nomad/etc/certs/$REGION-cli-nomad-key.pem
+```
+
 # Volumes
 
 To use host volume you can specify the `mount` settings in `config` section for the nomad job.
