@@ -122,6 +122,7 @@ export NOMAD_CACERT=nomad-agent-ca.pem
 export NOMAD_CACERT=/var/packages/nomad/shares/nomad/etc/certs/nomad-agent-ca.pem
 export NOMAD_CLIENT_CERT=/var/packages/nomad/shares/nomad/etc/certs/$REGION-cli-nomad.pem
 export NOMAD_CLIENT_KEY=/var/packages/nomad/shares/nomad/etc/certs/$REGION-cli-nomad-key.pem
+export NOMAD_TOKEN="BOOTSTRAP_SECRET_ID"
 ```
 
 # Volumes
