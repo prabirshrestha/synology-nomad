@@ -109,8 +109,10 @@ To access via Chrome browser generate the p12 cert and import by navigating to `
 
 ```bash
 export REGION=global
-openssl pkcs12 -export -inkey ./$REGION-cli-nomad-key.pem -in ./$REGION-cli-nomad.pem -out ./$REGION-cli-nomad.p12 -passout pass:
+openssl pkcs12 -export -legacy -inkey ./$REGION-cli-nomad-key.pem -in ./$REGION-cli-nomad.pem -out ./$REGION-cli-nomad.p12 -passout pass:
 ```
+
+`-legacy` flag is required when using newer version of openssl to be compatible with MacOS which can be installed by Key Chain.
 
 To easily access via client set the following enviorment variables. You can also save this to a file `env` and call `source env`.
 
