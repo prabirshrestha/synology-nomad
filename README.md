@@ -146,6 +146,41 @@ Installation log can be found at `/var/packages/nomad/shares/nomad/var/log/nomad
 
 systemd logs for nomad, can be found by `sudo systemctl status pkgctl-nomad.service` or `sudo journalctl -u pkgctl-nomad.service`.
 
+## Viewing nomad logs
+
+1. Find the process id of nomad.
+
+```bash
+$ ps -aux | grep -v grep | grep nomad
+nomad    21818  1.0  0.2 2346532 85160 ?       Sl   03:37   0:07 /var/packages/nomad/target/bin/nomad agent -config /var/packages/nomad/shares/nomad/etc/nomad.d/nomad.hcl -config /var/packages/nomad/shares/nomad/etc/nomad.d/
+```
+
+Here `21818` is the process id of nomad.
+
+2. Find the systemd unit file for nomad process id.
+
+```bash
+$ systemctl status 21818
+user@258047.service - User Manager for UID 258047
+  Loaded: loaded (/usr/lib/systemd/system/user@.service; static; vendor preset: disabled)
+  Active: active (running) since Wed 2024-06-19 03:37:17 PDT; 14min ago
+Main PID: 21700 (systemd)
+  Status: "Startup finished in 27ms."
+  CGroup: /user.slice/user-258047.slice/user@258047.service
+          ├─21700 /usr/lib/systemd/systemd --user
+          ├─21711 (sd-pam)
+          └─nomad.slice
+            └─pkguser-nomad.service
+              ├─21817 /bin/sh /var/packages/nomad/target/start.sh
+              └─21818 /var/packages/nomad/target/bin/nomad agent -config /var/packages/nomad/shares/nomad/etc/nomad.d/nomad.hcl -config /var/packages/n...
+```
+
+3. View logs using `journalctl`.
+
+```bash
+$ sudo journalctl -u user@258047.service
+```
+
 # Uninstalling
 
 * Package can be uninstalled via the package center.
