@@ -3,7 +3,7 @@ set -e
 
 if [[ -z "$NOMAD_VERSION" ]]; then
 # renovate: datasource=github-releases depName=hashicorp/nomad versioning=semver extractVersion=^v(?<version>.*)$
-NOMAD_VERSION=1.9.2
+NOMAD_VERSION=1.9.3
 fi
 
 export PACKAGE_VERSION="${NOMAD_VERSION}-1000"
